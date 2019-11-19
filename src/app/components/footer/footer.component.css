@@ -1,0 +1,18 @@
+.example-button-row button,
+.example-button-row a {
+  margin: 8px;
+}
+
+:host ::ng-deep .mat-slider-thumb-label-text {
+  font-size: 10px;
+}
+
+:host ::ng-deep .mat-slider-track-background {
+  background-color: #CCD1D1;
+}
+
+mat-slider {
+  width: 500px;
+  margin: 20px;
+  background-color: #EAEDED;
+}

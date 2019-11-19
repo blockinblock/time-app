@@ -1,0 +1,21 @@
+<!-- <aol-map #map [width]="'100%'" [height]="'90%'">
+  <aol-interaction-default></aol-interaction-default>
+  <aol-control-zoom [class]="ol-zoom"></aol-control-zoom>
+  <aol-view [zoom]="10">
+      <aol-coordinate [x]="-122.1916" [y]="37.7857" [srid]="'EPSG:4326'"></aol-coordinate>
+  </aol-view>
+  <aol-layer-tile>
+      <aol-source-osm></aol-source-osm>
+  </aol-layer-tile>
+  <aol-layer-tile>
+    <aol-source-tilewms
+      [url]="'http://localhost:8080/geoserver/epa/wms/'"
+      [params]="{
+        'LAYERS':'epa:EPA_CO_Daily_2019_Calif_Jan01new',
+        'FORMAT':'image/png',
+        'TIME':'2019-01-01T06:00:00.0Z'}"
+      [projection]="'EPSG:3857'">
+    </aol-source-tilewms>
+  </aol-layer-tile>
+</aol-map> -->
+<div id={{mapId}} class="map"></div>

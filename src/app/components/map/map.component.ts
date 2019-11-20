@@ -49,11 +49,9 @@ export class MapComponent implements OnInit, AfterViewInit {
 
     this.myLayers = [this.osmLayer, this.timeLayer];
 
-    // Set properties
     this.osmLayer.setProperties({name : 'osm'});
     this.timeLayer.setProperties({name : 'epa'});
 
-    // Initialise map with layers
     this.map = new ol.Map({
       target: this.mapId,
       layers: this.myLayers,
@@ -78,7 +76,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * Adds an ol layer based on the button (time) clicked
+   * Adds the time-based layer to the map
    * @param time the time that was clicked e.g. '06:00'
    */
   addLayer(time: string) {

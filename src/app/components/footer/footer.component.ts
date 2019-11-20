@@ -12,18 +12,25 @@ export class FooterComponent implements OnInit {
   private time = '06:00';
 
   constructor(private messageService: MessageService) {
-    // Binds the scope of this to the footer
     this.formatLabel = this.formatLabel.bind(this);
   }
 
   ngOnInit() {
   }
 
+  /**
+   * Event handler takes a message and triggers message service
+   * @param message the string message
+   */
   click(message: string) {
-    // https://stackoverflow.com/questions/44066905/angular-2-send-data-from-component-to-service
     this.messageService.setMessage(message);
   }
 
+  /**
+   * Takes a tick interval number from the time slider and formats the correct time
+   * Additionally triggers the message service with the time
+   * @param value tick interval integer
+   */
   formatLabel(value: number) {
     switch (value) {
       case 1: {
@@ -68,10 +75,8 @@ export class FooterComponent implements OnInit {
       }
     }
 
-    // https://stackoverflow.com/questions/38245450/angular2-components-this-is-undefined-when-executing-callback-function
-    // https://stackoverflow.com/questions/39474272/angular-losing-context-when-running-function-reference-for-a-function-of-a-base
+    // TODO: triggers every time mouse enters time slider area. Suppress unnecessary events?
     this.messageService.setMessage(this.time);
-
     return this.time;
   }
 }

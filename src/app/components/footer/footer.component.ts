@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MessageService } from '../../services/message.service';
+import { TimeUtilsService } from '../../services/time-utils.service';
 
 @Component({
   selector: 'app-footer',
@@ -7,23 +8,27 @@ import { MessageService } from '../../services/message.service';
   styleUrls: ['./footer.component.css']
 })
 
-export class FooterComponent implements OnInit {
-
+export class FooterComponent {
   private time = '06:00';
+  private display = '0';        // Value (in mins) to display on the time slider
+  private prevTime: string;
+  private timeArray: any[];
+  private curTime;
 
-  constructor(private messageService: MessageService) {
+  constructor(private messageService: MessageService,
+              private timeUtilsService: TimeUtilsService) {
+
     this.formatLabel = this.formatLabel.bind(this);
-  }
 
-  ngOnInit() {
-  }
+    // Get array of future times
+    this.timeUtilsService.setTimeWindow$.subscribe((value) => {
+      this.timeArray = value;
+    });
 
-  /**
-   * Event handler takes a message and triggers message service
-   * @param message the string message
-   */
-  click(message: string) {
-    this.messageService.setMessage(message);
+    // Get the clock
+    this.timeUtilsService.time.subscribe((now: Date) => {
+      this.curTime = now.toLocaleTimeString();
+    });
   }
 
   /**
@@ -32,51 +37,77 @@ export class FooterComponent implements OnInit {
    * @param value tick interval integer
    */
   formatLabel(value: number) {
+    this.timeUtilsService.setTimeWindow();
+
     switch (value) {
+      case 0: {
+        this.display = '0';
+        this.time = this.timeArray[0].value;
+        break;
+      }
       case 1: {
-        this.time = '06:00';
+        this.display = '+5';
+        this.time = this.timeArray[1].value;
         break;
       }
       case 2: {
-        this.time = '08:00';
+        this.display = '+10';
+        this.time = this.timeArray[2].value;
         break;
       }
       case 3: {
-        this.time = '10:00';
+        this.display = '+15';
+        this.time = this.timeArray[3].value;
         break;
       }
       case 4: {
-        this.time = '11:00';
+        this.display = '+20';
+        this.time = this.timeArray[4].value;
         break;
       }
       case 5: {
-        this.time = '12:00';
+        this.display = '+25';
+        this.time = this.timeArray[5].value;
         break;
       }
       case 6: {
-        this.time = '14:00';
+        this.display = '+30';
+        this.time = this.timeArray[6].value;
         break;
       }
       case 7: {
-        this.time = '16:00';
+        this.display = '+35';
+        this.time = this.timeArray[7].value;
         break;
       }
       case 8: {
-        this.time = '18:00';
+        this.display = '+40';
+        this.time = this.timeArray[8].value;
         break;
       }
       case 9: {
-        this.time = '20:00';
+        this.display = '+45';
+        this.time = this.timeArray[9].value;
         break;
       }
       case 10: {
-        this.time = '23:00';
+        this.display = '+50';
+        this.time = this.timeArray[10].value;
+        break;
+      }
+      case 11: {
+        this.display = '+55';
+        this.time = this.timeArray[11].value;
         break;
       }
     }
 
-    // TODO: triggers every time mouse enters time slider area. Suppress unnecessary events?
-    this.messageService.setMessage(this.time);
-    return this.time;
+    // If the time slider got moved
+    if (this.time !== this.prevTime) {
+      this.messageService.setMessage(this.time);
+      this.prevTime = this.time;
+    }
+
+    return this.display;
   }
 }

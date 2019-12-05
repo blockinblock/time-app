@@ -12,7 +12,11 @@ import { MatSliderModule } from '@angular/material/slider';
 // Map Stuff
 import { MapComponent } from './components/map/map.component';
 import { FooterComponent } from './components/footer/footer.component';
+
+// Helpers
 import { MessageService } from './services/message.service';
+import { DatePipe } from '@angular/common';
+import { TimeUtilsService } from './services/time-utils.service';
 
 @NgModule({
   declarations: [
@@ -29,7 +33,9 @@ import { MessageService } from './services/message.service';
     MatSliderModule
   ],
   providers: [
-    MessageService
+    DatePipe,
+    MessageService,
+    TimeUtilsService
   ],
   bootstrap: [AppComponent]
 })

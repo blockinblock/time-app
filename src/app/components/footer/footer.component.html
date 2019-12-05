@@ -1,12 +1,4 @@
-<mat-slider thumbLabel [displayWith]="formatLabel" tickInterval="1" min="1" max="10"></mat-slider>
-<!-- <div class="example-button-row">
-  <button mat-raised-button color="primary" (click)="click('06:00')">06:00</button>
-  <button mat-raised-button color="primary" (click)="click('08:00')">08:00</button>
-  <button mat-raised-button color="primary" (click)="click('10:00')">10:00</button>
-  <button mat-raised-button color="primary" (click)="click('12:00')">12:00</button>
-  <button mat-raised-button color="primary" (click)="click('14:00')">14:00</button>
-  <button mat-raised-button color="primary" (click)="click('16:00')">16:00</button>
-  <button mat-raised-button color="primary" (click)="click('18:00')">18:00</button>
-  <button mat-raised-button color="primary" (click)="click('20:00')">20:00</button>
-  <button mat-raised-button color="primary" (click)="click('23:00')">23:00</button>
-</div> -->
+<ul class="flex-container">
+  <p id="clock">Current Time: {{ curTime }}</p>
+  <mat-slider thumbLabel [displayWith]="formatLabel" tickInterval="1" min="0" max="11"></mat-slider>
+</ul>

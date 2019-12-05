@@ -1,5 +1,6 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, AfterViewInit } from '@angular/core';
 import { MessageService } from '../../services/message.service';
+import { TimeUtilsService } from '../../services/time-utils.service';
 import * as ol from 'openlayers';
 
 @Component({
@@ -8,59 +9,57 @@ import * as ol from 'openlayers';
   styleUrls: ['./map.component.css']
 })
 
-export class MapComponent implements OnInit, AfterViewInit {
-  private myLayers: any;
+export class MapComponent implements AfterViewInit {
   private map: ol.Map = null;
   private mapId = 'MyMap';
   private selectedTime: string;
   private osmLayer;
   private timeLayer;
+  private currentTime = '';
 
-  constructor(private messageService: MessageService) {
+  constructor(private messageService: MessageService,
+              private timeUtilsService: TimeUtilsService) {
+
+    // Detect if time slider moved and create layer
     this.messageService.setMessage$.subscribe((value) => {
       this.selectedTime = value;
-      console.log('map: ' + value);
 
       if (this.map) {
-        this.addLayer(this.selectedTime);
+        this.removeTimeLayer();
+        this.createTimeLayer(this.selectedTime);
+        console.log('this.selectedTime: ' + this.selectedTime);
       }
     });
-  }
 
-  ngOnInit() {
+    // Current time is used for the initial fetch of the WMS time layer
+    this.timeUtilsService.setTime$.subscribe((value) => {
+      this.currentTime = value;
+      console.log('currentTime: ' + this.currentTime);
+    });
+
+    // TODO: Refresh time layer every 5 mins
+
   }
 
   ngAfterViewInit() {
+    this.timeUtilsService.setTime();
+
+    this.map = new ol.Map({
+      target: this.mapId,
+      view: new ol.View({
+        center: ol.proj.fromLonLat([10.4150, 51.0344]),
+        zoom: 6
+      })
+    });
+
     this.osmLayer = new ol.layer.Tile({
       source: new ol.source.OSM()
     });
 
-    this.timeLayer = new ol.layer.Tile({
-      source: new ol.source.TileWMS({
-        url: 'http://localhost:8080/geoserver/epa/wms/',
-        projection: 'EPSG:3857',
-        params: {
-          LAYERS: 'epa:EPA_CO_Daily_2019_Calif_Jan01new',
-          FORMAT: 'image/png',
-          TIME: '2019-01-01T06:00:00.0Z'
-        }
-       })
-    });
-
-    this.myLayers = [this.osmLayer, this.timeLayer];
-
     this.osmLayer.setProperties({name : 'osm'});
-    this.timeLayer.setProperties({name : 'epa'});
+    this.map.addLayer(this.osmLayer);
 
-    this.map = new ol.Map({
-      target: this.mapId,
-      layers: this.myLayers,
-      view: new ol.View({
-        center: ol.proj.fromLonLat([-122.1916, 37.7857]),
-        zoom: 10
-      })
-    });
-    console.log('map inititalised');
+    this.timeLayer = this.createTimeLayer(this.currentTime);
   }
 
   /**
@@ -68,8 +67,7 @@ export class MapComponent implements OnInit, AfterViewInit {
    */
   removeTimeLayer() {
     this.map.getLayers().forEach(layer => {
-      if (layer.get('name') === 'epa') {
-        console.log('removing ... ' + layer.get('name'));
+      if (layer.get('name') === 'time') {
         this.map.removeLayer(layer);
       }
     });
@@ -79,30 +77,22 @@ export class MapComponent implements OnInit, AfterViewInit {
    * Adds the time-based layer to the map
    * @param time the time that was clicked e.g. '06:00'
    */
-  addLayer(time: string) {
-    const timeStamp = '2019-01-01T' + time + ':00.0Z';
+  createTimeLayer(time: string) {
+    this.timeLayer = new ol.layer.Tile({
+      source: new ol.source.TileWMS({
+        url: 'https://maps.dwd.de/geoserver/dwd/wms/',
+        projection: 'EPSG:3857',
+        crossOrigin: 'anonymous',
+        params: {
+          LAYERS: 'dwd:FX-Produkt',
+          FORMAT: 'image/png',
+          TIME: time
+        }
+      })
+    });
 
-    if (this.map) {
-      this.removeTimeLayer();
-
-      console.log('add layer...');
-
-      this.timeLayer = new ol.layer.Tile({
-        source: new ol.source.TileWMS({
-          url: 'http://localhost:8080/geoserver/epa/wms/',
-          projection: 'EPSG:3857',
-          params: {
-            LAYERS: 'epa:EPA_CO_Daily_2019_Calif_Jan01new',
-            FORMAT: 'image/png',
-            TIME: timeStamp
-          }
-        })
-      });
-
-      this.timeLayer.setProperties({name : 'epa'});
-      this.map.addLayer(this.timeLayer);
-
-      console.log(this.map.getLayers());
-    }
+    this.timeLayer.setProperties({name : 'time'});
+    this.map.addLayer(this.timeLayer);
+    console.log(this.timeLayer);
   }
 }

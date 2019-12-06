@@ -16,6 +16,10 @@ export class TimeUtilsService {
   setTime$: Observable<any>;
   private setTimeSubject = new Subject<any>();
 
+  // Observeable 5 min timer (rounded)
+  setFiveTime$: Observable<any>;
+  private setFiveTimeSubject = new Subject<any>();
+
   private currentDate = new Date();
   private currentDateStr = '';
   private timeWindow = [];
@@ -23,6 +27,7 @@ export class TimeUtilsService {
   constructor(private datePipe: DatePipe) {
     this.setTimeWindow$ = this.setTimeWindowSubject.asObservable();
     this.setTime$ = this.setTimeSubject.asObservable();
+    this.setFiveTime$ = this.setFiveTimeSubject.asObservable();
   }
 
   // One second timer
@@ -31,10 +36,10 @@ export class TimeUtilsService {
     shareReplay(1)
   );
 
-  // Five minute timer
-  // TODO: change timer to 300000 for 5 mins!!!
-  private fiveMinTimer$: Observable<Date> = timer(0, 60000).pipe(
-    map(tick => new Date()),
+  // Five minute timer (rounded to nearest 5 mins)
+  private rounded = this.roundDateTime(this.currentDate, 5);
+  private fiveMinTimer$: Observable<string> = timer(this.rounded, 300000).pipe(
+    map(tick => this.formatDateTime(this.roundDateTime(new Date(), 5))),
     shareReplay(1)
   );
 

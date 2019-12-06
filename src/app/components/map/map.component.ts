@@ -37,8 +37,14 @@ export class MapComponent implements AfterViewInit {
       console.log('currentTime: ' + this.currentTime);
     });
 
-    // TODO: Refresh time layer every 5 mins
-
+    // Refresh time layer every 5 mins
+    this.timeUtilsService.fiveMin.subscribe((value) => {
+      this.selectedTime = value;
+      if (this.map) {
+        this.removeTimeLayer();
+        this.createTimeLayer(this.selectedTime);
+      }
+    });
   }
 
   ngAfterViewInit() {

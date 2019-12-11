@@ -1,4 +1,10 @@
-<ul class="flex-container">
-  <p id="clock">Current Time: {{ curTime }}</p>
+<ul id="footer">
+  <h2>Time Slider Demo</h2>
+  <p>This demo shows weather radar forecasts from the Deutscher Wetterdienst's GeoWebService. 
+    Move the time slider in 5 minute increments to show the forecast for that time period. 
+    The weather data updates every 5 minutes automatically. 
+    Click <a href="https://www.dwd.de/DE/leistungen/geowebservice/geowebservice.html" target="_blank">here</a> for more information on the GeoWebService, 
+    and <a href="https://maps.dwd.de/geoserver/wms?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetCapabilities"target="_blank">here</a> for the GetCapabilities document.</p>
+  <p id="clock"><strong>Current Time: {{ curTime }}</strong></p>
   <mat-slider thumbLabel [displayWith]="formatLabel" tickInterval="1" min="0" max="11"></mat-slider>
 </ul>

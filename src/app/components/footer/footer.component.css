@@ -11,12 +11,12 @@ mat-slider {
   background-color: #EAEDED;
 }
 
-.flex-container {
+#footer {
   display: flex;
-  flex-flow: row wrap;
-  justify-content: center;                                     
+  align-items: center;
+  flex-direction: column;
 }
 
 #clock {
-  margin: 15px;
+  margin: 5px;
 }

@@ -7,7 +7,9 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "build-git-prod": "ng build --prod --output-path ./dist/ --base-href /time-app/",
+    "build-git-dev": "ng build --output-path ./dist/ --base-href /time-app/"
   },
   "private": true,
   "dependencies": {

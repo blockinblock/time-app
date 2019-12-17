@@ -27,14 +27,12 @@ export class MapComponent implements AfterViewInit {
       if (this.map) {
         this.removeTimeLayer();
         this.createTimeLayer(this.selectedTime);
-        console.log('this.selectedTime: ' + this.selectedTime);
       }
     });
 
     // Current time is used for the initial fetch of the WMS time layer
     this.timeUtilsService.setTime$.subscribe((value) => {
       this.currentTime = value;
-      console.log('currentTime: ' + this.currentTime);
     });
 
     // Refresh time layer every 5 mins
@@ -99,6 +97,5 @@ export class MapComponent implements AfterViewInit {
 
     this.timeLayer.setProperties({name : 'time'});
     this.map.addLayer(this.timeLayer);
-    console.log(this.timeLayer);
   }
 }
